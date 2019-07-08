@@ -1,3 +1,0 @@
-time.c.c:1:5: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘.’ token
- time.txt
-     ^

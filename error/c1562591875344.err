@@ -1,0 +1,4 @@
+./file/c1562591875344.c: In function ‘main’:
+./file/c1562591875344.c:4:2: error: expected expression before ‘,’ token
+  ,
+  ^

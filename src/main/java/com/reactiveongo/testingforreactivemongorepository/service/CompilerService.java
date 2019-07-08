@@ -2,6 +2,7 @@ package com.reactiveongo.testingforreactivemongorepository.service;
 
 import com.reactiveongo.testingforreactivemongorepository.model.User;
 import com.reactiveongo.testingforreactivemongorepository.repo.BlockingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -10,11 +11,11 @@ import java.util.UUID;
 
 @Service
 public class CompilerService {
-
-    private final BlockingRepository blockingRepository;
-    CompilerService (BlockingRepository blockingRepository){
-        this.blockingRepository=blockingRepository;
-    }
+    @Autowired
+    private  BlockingRepository blockingRepository;
+//    CompilerService (BlockingRepository blockingRepository){
+//        this.blockingRepository=blockingRepository;
+//    }
     public String runCode(String code,String lang,String input) throws IOException {
         blockingRepository.save(new User(UUID.randomUUID().toString(),code,input,null,null,lang));
         String timeStamp = String.valueOf(new Date().getTime());
@@ -28,11 +29,21 @@ public class CompilerService {
         codeFileWriter.flush();
         Process process=Runtime.getRuntime()
                 .exec("sh comp.sh "+lang+" "+timeStamp);
-        BufferedReader stdError=new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader stdError=new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        BufferedReader stdInput=new BufferedReader(new InputStreamReader(process.getInputStream()));
         String s,ans="";
+        boolean error=false;
         while ((s = stdError.readLine()) != null) {
+            error=true;
             ans+=s;
             System.out.print(s);
+        }
+        if(error)
+            return ans;
+        ans="";
+        while((s=stdInput.readLine())!=null){
+            ans+=s;
+            System.out.println(s);
         }
         return ans;
      }

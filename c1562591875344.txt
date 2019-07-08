@@ -1,4 +1,6 @@
 #include<stdio.h>
-void main(){
+int main(){
 	printf("%d",3+5+6);
+	,
+	return 0;
 }
